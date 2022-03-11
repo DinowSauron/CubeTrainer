@@ -1,0 +1,26 @@
+.profile {
+  display: flex;
+  align-items: center;
+  margin: 0 1rem;
+  .img {
+    position: relative;
+    left: inherit;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 20rem;
+    overflow: hidden;
+  }
+  >div {
+    margin-right: 1rem;
+  }
+  h3 {
+    text-align: right;
+    margin: 0;
+  }
+  p {
+    margin: 0;
+    font-size: 0.7rem;
+    color: var(--letters)
+  }
+
+}

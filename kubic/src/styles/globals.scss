@@ -1,0 +1,79 @@
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-size: 16px;
+  box-sizing: border-box;
+  min-height: 100vh;
+  background-color: var(--bk2);
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+
+  overflow: hidden;
+}
+
+* {
+  box-sizing: border-box;
+  color: #fff;
+}
+
+input {
+  font-weight: inherit;
+  font-size: inherit;
+  font-style: inherit;
+}
+
+:root {
+
+  --darkGreen: #182321;
+  --frameGreen: #222e2e;
+  --lightGreen: #3dc98d;
+  --letters: #578a83;
+  --scrollbar-color: #61726d;
+}
+
+button {
+  transition: opacity .6s;
+}
+button:hover{
+  cursor: pointer;
+  opacity: 0.82;
+}
+
+
+
+
+// scroolbars
+
+section {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+section, main {
+
+  scrollbar-width: thin;
+  transition: scrollbar-color .2s;
+
+  &:hover {
+    scrollbar-color: var(--scrollbar-color) transparent;
+  }
+  &::-webkit-scrollbar {
+    width: 16px;
+    // height: 100%;
+  }
+  &::-webkit-scrollbar-track {
+      border: 15px solid transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+      transition: .2s;
+      box-shadow: inset 0 0 100px var(--scrollbar-color);
+      border: 5px solid transparent;
+      border-radius: 10px;
+  }
+  &::-webkit-scrollbar-thumb:hover{
+      cursor: n-resize;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+      box-shadow: inset 0 0 100px #aaaaaa;
+  }
+}

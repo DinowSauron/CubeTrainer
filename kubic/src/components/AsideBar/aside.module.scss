@@ -1,0 +1,37 @@
+
+.main {
+  width: 15rem;
+  height: 100vh;
+  // background: #5553;
+
+  padding-left: 1rem;
+  padding-top: 5px;
+
+  h1 {
+    margin: 0;
+    font-size: 2.5rem;
+    font-weight: bold;
+    height: 3.2rem;
+    letter-spacing: 2px;
+
+    span {
+      color: var(--lightGreen);
+    }
+  }
+  .sections {
+
+    height: calc(100vh - 4.2rem);
+    overflow-x: hidden;
+    overflow-y: scroll;
+    h2 {
+      color: var(--letters);
+      text-transform: uppercase;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      margin-top: 3rem;
+  
+      font-size: 1rem;
+    }
+    
+  }
+}
