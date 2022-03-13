@@ -1,0 +1,12 @@
+.main {
+
+  display: flex;
+  background-color: var(--darkGreen);
+  width: 100vw;
+  height: 100vh;
+  
+  .container {
+    position: relative;
+    width: 100%;
+  }
+}

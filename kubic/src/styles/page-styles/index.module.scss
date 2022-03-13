@@ -1,30 +1,17 @@
 
 
-.main {
+.page {
+  width: 100%;
+  height: calc(100% - 4.2rem);
   display: flex;
-  background-color: var(--darkGreen);
-  width: 100vw;
-  height: 100vh;
+  align-items: center;
+  flex-direction: column;
 
-  .container {
-    position: relative;
+  .pageContent {
+    display: flex;
+    flex-wrap: wrap;
     width: 100%;
-
-    section {
-      width: 100%;
-      height: calc(100% - 4.2rem);
-      display: flex;
-      align-items: center;
-      flex-direction: column;
-
-      .pageContent {
-        display: flex;
-        flex-wrap: wrap;
-        width: 100%;
-        max-width: 1080px;
-        min-height: 100%;
-
-      }
-    }
+    max-width: 1080px;
+    min-height: 100%;
   }
 }

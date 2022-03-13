@@ -18,18 +18,18 @@ export function AsideBar(props: AsideProps) {
           
           <h2>Geral</h2>
 
-          <NavLink href="">Estatisticas</NavLink>
-          <NavLink href="nada">Normal Solve</NavLink>
-          <NavLink href="nada">BLD Solve</NavLink>
-          <NavLink href="nada">Timer</NavLink>
+          <NavLink href="/" exactHref reload> Statistics </NavLink>
+          <NavLink href="/normalsolve" exactHref> Normal Solve </NavLink>
+          <NavLink href="/bldsolve" exactHref> BLD Solve </NavLink>
+          <NavLink href="/nada" exactHref> Timer </NavLink>
 
           
           <h2>Outros</h2>
 
-          <NavLink href="nada">Algoritimos</NavLink>
-          <NavLink href="nada">Tutoriais</NavLink>
-          <NavLink href="nada">Sobre</NavLink>
-          <NavLink href="nada">Comandos</NavLink>
+          <NavLink href="/nada" exactHref> Algoritimos </NavLink>
+          <NavLink href="/nada" exactHref> Tutoriais </NavLink>
+          <NavLink href="/nada" exactHref> Sobre </NavLink>
+          <NavLink href="/nada" exactHref> Comandos </NavLink>
         
         </nav>
 

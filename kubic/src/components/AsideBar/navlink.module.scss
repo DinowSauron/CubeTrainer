@@ -1,14 +1,15 @@
 
 .NavLink {
-  p {
+  a {
     font-size: 1.4rem;
     font-weight: bold;
     margin: 0;
     margin-left: 1rem;
     margin-bottom: .2rem;
   
-    &.active {
-      color: var(--lightGreen)
-    }
+   
+  }
+  &.active a{
+    color: var(--lightGreen)
   }
 }

@@ -1,4 +1,5 @@
 import dynamic from "next/dynamic";
+import { useEffect } from "react";
 import styles from "./graphs.module.scss";
 
 const Chart = dynamic(() => import('react-apexcharts'), {ssr: false})
@@ -61,6 +62,7 @@ type GraphsProps = {
 
 export function Graphs({title, name, data}: GraphsProps) {
 
+
   const series = [
     {name, data}
   ]
@@ -69,6 +71,7 @@ export function Graphs({title, name, data}: GraphsProps) {
     <div className={styles.main}>
       
       <div className={styles.chart}>
+        <h3>{title}</h3>
         <Chart
           options={options}
           series={series}

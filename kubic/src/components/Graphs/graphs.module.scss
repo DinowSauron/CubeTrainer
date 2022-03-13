@@ -4,21 +4,33 @@
   display: flex;
   align-items: center;
   justify-content: center;
-
+  
   width: calc(100% / var(--grid-items));
-  height: calc(50vw / var(--grid-items));
+  padding-top: calc(56% / var(--grid-items));
+  height: 0;
+  margin-bottom: 10px;
   overflow: hidden;
 
   .chart {
-    position: relative;
+    position: absolute;
+    top: 0;
+    left: 0;
     border-radius: 20px;
     padding: 2px;
 
     width: calc(100% * .95);
-    height: 90%;
+    height: 95%;
 
     background: var(--frameGreen);
     color: #000 !important;
+    overflow: hidden;
+
+    h3 {
+      position: absolute;
+      top: 1rem;
+      left: 40px;
+      margin: 0;
+    }
 
   }
 }
