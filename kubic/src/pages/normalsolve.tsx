@@ -1,3 +1,4 @@
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { useEffect } from "react"
 import { SetDisplayVars } from "../lib/GlobalFunctions"
@@ -15,31 +16,46 @@ export default function NormalSolve() {
   const scramble = "U' L2 D' U R2 B' D' U' L2 B2 R' U' B' F' L U2 F R2 U'"
 
   // const [date, setDate] = useState((new Date()).getTime());
-  const [miliseconds, setMiliseconds] = useState(0);
-  const [seconds, setSeconds] = useState(0);
-  const [timing, setTiming] = useState(0);
+  const [miliseconds, setMiliseconds] = useState('00');
+  const [seconds, setSeconds] = useState('00');
+  const [timingSolve, setTimingSolve] = useState(0);
   const [startCounter, setStartCounter] = useState(false);
   
-  const [startTimingPoint, setStartTimingPoint] = useState(new Date());
+  const [startTimingPoint, setStartTimingPoint] = useState((new Date()).getTime());
+  function runTiming(reset=false) {
+    if(startCounter){
+      const timer = (new Date()).getTime();
+      const timerCount = reset ? 0 : (timer - startTimingPoint)
+      setTimingSolve(timerCount);
+    }
+  }
+  function TimerSteps() {
+    setSeconds(secondsFormated(timingSolve));
+    setMiliseconds(milisecondsFormated(timingSolve))
+  }
   useEffect(() => {
-    
     setTimeout(() => {
       if(startCounter){
-        const date = (new Date()).getTime();
-        setTiming(date - startTimingPoint.getTime());
-        setSeconds(secondsFormated(timing));
-        setMiliseconds(milisecondsFormated(timing))
+        runTiming();
       }
     }, 50);
-  }, [timing,startCounter])
 
-  function StartTiming() {
-    setStartTimingPoint(new Date());
+    TimerSteps();
+  }, [timingSolve,startCounter]);
+
+  function handleStopTiming() {
+    setTimingSolve(timingSolve)
+    setStartCounter(false);
+
+  }
+  function HandleStartTiming() {
+    setStartTimingPoint((new Date()).getTime());
     setStartCounter(true);
-    setTiming(0);
+    runTiming(true)
+    // setTimingSolve(0);
   }
   function FormatDoubleNumbers(num: string | number) {
-    return num<100 ? (num<10 ? '0'+num : num) : '00';
+    return (num<100 ? (num<10 ? '0'+num : num) : '00').toString();
   }
 
   function milisecondsFormated(ms: number) {
@@ -53,9 +69,12 @@ export default function NormalSolve() {
 
     return FormatDoubleNumbers(msCount)
   }
+  function handleAddSeconds(seconds: number) {
+    setTimingSolve(timingSolve + (seconds * 1000))
+  }
   function secondsFormated(ms: number) {
     if(ms < 1000){
-      return 0;
+      return '00';
     }
     const seconds = Number(Math.floor(ms / 1000).toFixed(0));
     const rest = Number(Math.floor(seconds / 100).toFixed(0)) * 100;
@@ -63,6 +82,9 @@ export default function NormalSolve() {
     const secondsClamp = secondsCalculated >= 60? secondsCalculated-60:secondsCalculated
     return FormatDoubleNumbers(secondsClamp);
   }
+
+  const { data } = useSession()
+  const accessToken  = data?data.accessToken:"aaa"
 
 
   return (
@@ -86,7 +108,19 @@ export default function NormalSolve() {
               {/* <p>{date - startTimingPoint.getTime()}</p> */}
               {/* {/*<p>{secondsFormated(8042)}</p> */}
               {/* <p>{FormatDoubleNumbers(2)}</p> */}
-              <button onClick={() => StartTiming()}>Start Timing</button>
+              <p>{accessToken}</p>
+              <p>{data&&data.type}</p>
+              {timingSolve > 0 && !startCounter && (
+                <>
+                  <button>Record Timer</button>
+                  <button onClick={() => handleAddSeconds(2)}>Record Timer +DNF</button>
+                </>
+              )}
+              {startCounter ? (
+                <button className={styles.stopTimer} onClick={() => handleStopTiming()}>Stop Timing</button>
+               ):(
+                <button className={styles.startTimer} onClick={() => HandleStartTiming()}>Start Timing</button>
+              )} 
             </div>
           </div>
         </div>

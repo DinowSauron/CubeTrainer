@@ -4,9 +4,7 @@ var multiplyer = 0;
 
 const timesForMultiply = 500000
 var numant = [
-  1,  2,  3,  4,  7, 10,
-11, 12, 15, 16, 17, 19,
-22, 23, 24
+  2,5,7,8,10,11,13,14,17,18,19,20,22,23,24//,1,4,12,16,21
 ]
 
 var probability = {
@@ -49,7 +47,7 @@ console.log("Running...")
 while (true){
   var acertos = 0
 
-  while (numbers.length < numant.length) {
+  while (numbers.length < 15) {
     const r = Math.ceil(Math.random() * 25);
   
     if(!numbers.includes(r)) {

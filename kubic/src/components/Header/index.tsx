@@ -20,7 +20,7 @@ export function Header(props: HeaderProps) {
       <div className={styles.RightContent}>
 
         <span/>
-        <LoginStatus/>
+        <LoginStatus />
       </div>
     </header>
   )
