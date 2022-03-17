@@ -2,6 +2,7 @@ import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { useEffect } from "react"
 import { SetDisplayVars } from "../lib/GlobalFunctions"
+import { api } from "../services/api";
 import styles  from "../styles/page-styles/normal-solve.module.scss"
 
 
@@ -82,6 +83,9 @@ export default function NormalSolve() {
     const secondsClamp = secondsCalculated >= 60? secondsCalculated-60:secondsCalculated
     return FormatDoubleNumbers(secondsClamp);
   }
+  function handleRecordTime(){
+    api.post("/recordTime");
+  }
 
   const { data } = useSession()
   const accessToken  = data?data.accessToken:"aaa"
@@ -112,7 +116,7 @@ export default function NormalSolve() {
               <p>{data&&data.type}</p>
               {timingSolve > 0 && !startCounter && (
                 <>
-                  <button>Record Timer</button>
+                  <button onClick={() => handleRecordTime()}>Record Timer</button>
                   <button onClick={() => handleAddSeconds(2)}>Record Timer +DNF</button>
                 </>
               )}

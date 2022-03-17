@@ -1,5 +1,7 @@
 import NextAuth from "next-auth"
 import GithubProvider from "next-auth/providers/github"
+import { q, fauna} from "../../../services/fauna"
+
 
 export default NextAuth({
   // Configure one or more authentication providers
@@ -16,10 +18,43 @@ export default NextAuth({
   },
   secret: process.env.HASH_KEY,
   callbacks: {
-    async session({ session }) {
+    async signIn(params) {
+      const user = params.user
+
       // Send properties to the client, like an access_token from a provider.
-      session.type = 'Usuario logado com sucesso!'
-      return session
+      try {
+        await fauna.query(
+          q.If(
+            q.Not(
+              q.Exists(
+                q.Match(
+                  q.Index("user_by_email"),
+                  q.Casefold(user.email)
+                )
+              )
+            ),
+            q.Create(
+              q.Collection("Users"),
+              { 
+                data: {
+                  name: user.name,
+                  email: user.email
+                }
+              }
+            ),
+            q.Get(
+              q.Match(
+                q.Index("user_by_email"),
+                q.Casefold(user.email)
+              )
+            )
+          )
+        )
+      } catch(err) {
+        return false 
+      }
+
+      return true
     }
   }
 })
