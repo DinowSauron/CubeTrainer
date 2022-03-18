@@ -18,6 +18,12 @@ export default NextAuth({
   },
   secret: process.env.HASH_KEY,
   callbacks: {
+    /*async session({session, token}) {
+ 
+      //console.log(token)
+
+      return session
+    },*/
     async signIn(params) {
       const user = params.user
 

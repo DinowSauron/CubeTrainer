@@ -83,8 +83,9 @@ export default function NormalSolve() {
     const secondsClamp = secondsCalculated >= 60? secondsCalculated-60:secondsCalculated
     return FormatDoubleNumbers(secondsClamp);
   }
-  function handleRecordTime(){
-    api.post("/recordTime");
+  async function handleRecordTime(){
+    const req = await api.post("/recordTime");
+    console.log(req)
   }
 
   const { data } = useSession()
