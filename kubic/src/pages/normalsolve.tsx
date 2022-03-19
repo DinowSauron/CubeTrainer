@@ -1,6 +1,7 @@
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { useEffect } from "react"
+import { ScoresList } from "../components/ScoresList";
 import { Timer } from "../components/Timer";
 import { SetDisplayVars } from "../lib/GlobalFunctions"
 import { api } from "../services/api";
@@ -17,8 +18,6 @@ export default function NormalSolve() {
 
   const scramble = "U' L2 D' U R2 B' D' U' L2 B2 R' U' B' F' L U2 F R2 U'"
 
-  // const [date, setDate] = useState((new Date()).getTime());
-  
 
 
   return (
@@ -32,11 +31,9 @@ export default function NormalSolve() {
           <p className={styles.scramble}>Scramble: <span>{scramble}</span></p>
 
           <div className={styles.separator}>
-            <section>
-
-            </section>
+            <ScoresList timerType="NormalSolver"/>
             <div> 
-              <Timer scramble={scramble}/>
+              <Timer scramble={scramble} timerType={"NormalSolver"}/>
             </div>
           </div>
         </div>

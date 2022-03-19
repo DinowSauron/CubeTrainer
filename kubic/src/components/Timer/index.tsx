@@ -1,5 +1,4 @@
 import styles from "./timer.module.scss";
-import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { useEffect } from "react"
 import { getFormatedDate, milisecondsFormated, secondsFormated } from "../../lib/FormatterFunctions"
@@ -8,6 +7,7 @@ import { api } from "../../services/api";
 
 type ExampleProps = {
   scramble: string;
+  timerType: "NormalSolver" | "BLDSolver" | "TimerSolver"
 }
 
 export function Timer(props: ExampleProps) {
@@ -16,21 +16,16 @@ export function Timer(props: ExampleProps) {
   const [seconds, setSeconds] = useState('00');
   const [timingSolve, setTimingSolve] = useState(0);
   const [startCounter, setStartCounter] = useState(false);
-  const { data } = useSession()
-  
   const [startTimingPoint, setStartTimingPoint] = useState((new Date()).getTime());
+  
 
   
-  function runTiming(reset=false) {
+  function runTiming() {
     if(startCounter){
       const timer = (new Date()).getTime();
-      const timerCount = reset ? 0 : (timer - startTimingPoint)
+      const timerCount = timer - startTimingPoint;
       setTimingSolve(timerCount);
     }
-  }
-  function TimerSteps() {
-    setSeconds(secondsFormated(timingSolve));
-    setMiliseconds(milisecondsFormated(timingSolve))
   }
   useEffect(() => {
     setTimeout(() => {
@@ -39,44 +34,47 @@ export function Timer(props: ExampleProps) {
       }
     }, 50);
 
-    TimerSteps();
-  }, [timingSolve,startCounter]);
+    setSeconds(secondsFormated(timingSolve));
+    setMiliseconds(milisecondsFormated(timingSolve));
+  }, [timingSolve, startCounter]);
 
 
 
 
   function handleStopTiming() {
-    setTimingSolve(timingSolve)
     setStartCounter(false);
-
   }
   function HandleStartTiming() {
+    if(timingSolve > 0) {
+      setTimingSolve(0);
+    }
     setStartTimingPoint((new Date()).getTime());
     setStartCounter(true);
-    runTiming(true)
+    runTiming()
     // setTimingSolve(0);
   }
-
-  function handleAddSeconds(seconds: number) {
-    setTimingSolve(timingSolve + (seconds * 1000))
+  function handleCancelTimer() {
+    setTimingSolve(0);
+    setStartCounter(false);
   }
   
 
-  async function handleRecordTime(){
+  async function handleRecordTime(isDNF = false){
     const params = {
-      timer: timingSolve,
-      isDNF: false,
+      timer: timingSolve + (isDNF?2000:0),
+      isDNF: isDNF,
       scramble: props.scramble,
       date: getFormatedDate()
     }
 
     const config = {
       headers: {
-        "SolverType": "NormalSolver"
+        "SolverType": props.timerType
       }
     }
 
-    const req = await api.post("/recordTime",params,config);
+    const req = await api.post("/setRecordTime",params,config);
+    handleCancelTimer();
     console.log(req)
   }
 
@@ -85,12 +83,11 @@ export function Timer(props: ExampleProps) {
     <div className={styles.main}>
       
       <p className={styles.timer}>{seconds}<span>.{miliseconds}</span></p>
-      <p>{data&&data.type}</p>
       {timingSolve > 0 && !startCounter && (
         <div>
           <button onClick={() => handleRecordTime()}>Record Timer</button>
-          <button onClick={() => handleAddSeconds(2)}>Record Timer +DNF</button>
-          <button onClick={() => handleAddSeconds(2)}>Cancel Timer</button>
+          <button onClick={() => handleRecordTime(true)}>Record Timer +DNF</button>
+          <button onClick={() => handleCancelTimer()}>Cancel Timer</button>
         </div>
       )}
       {startCounter ? (
