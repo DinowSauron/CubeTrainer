@@ -1,7 +1,7 @@
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { useEffect } from "react"
-import { SetDisplayVars } from "../lib/GlobalFunctions"
+import { getFormatedDate, SetDisplayVars } from "../lib/GlobalFunctions"
 import { api } from "../services/api";
 import styles  from "../styles/page-styles/normal-solve.module.scss"
 
@@ -83,8 +83,22 @@ export default function NormalSolve() {
     const secondsClamp = secondsCalculated >= 60? secondsCalculated-60:secondsCalculated
     return FormatDoubleNumbers(secondsClamp);
   }
+
   async function handleRecordTime(){
-    const req = await api.post("/recordTime");
+    const params = {
+      timer: timingSolve,
+      isDNF: false,
+      scramble: scramble,
+      date: getFormatedDate()
+    }
+
+    const config = {
+      headers: {
+        "SolverType": "NormalSolver"
+      }
+    }
+
+    const req = await api.post("/recordTime",params,config);
     console.log(req)
   }
 

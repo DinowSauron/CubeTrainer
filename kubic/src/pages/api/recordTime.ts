@@ -19,33 +19,30 @@ type UserScore = {
 }
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
+  if(req.method !== "POST") {
+    res.setHeader("Allow", "Post");
+    res.status(405).end("Method not allowed")
+  }
 
   const session = await getSession({ req });
 
-  // const userScores = await getUserScores(session) 
-  const userScores = { // test data
-    ref: 555,
-    ts: 1647563715015000,
-    data: {
-      user: { email: 'luiz.deadzone@gmail.com' },
-      SolverNormal: [ 32, 55, 55 ]
+  let userScores = await getUserScores(session) 
+
+
+  if(userScores != null){
+
+    const solverData = req.body;
+    const solverType = req.headers.solvertype as string
+
+    if(!userScores.data[solverType]) {
+      return res.status(404).send("SolverType not exist in DB");
     }
-  }
 
-
-
-  if(userScores){
-
-    console.log(userScores)
-
-    userScores.data.SolverNormal?
-    userScores.data.SolverNormal = [
-      ...userScores.data.SolverNormal,
-      55
-    ] : userScores.data.SolverNormal = [32]
+    userScores.data[solverType] = [
+      ...userScores.data[solverType],
+      solverData
+    ] 
     
-    
-    /*
     const updateStatus = await updateScore(userScores)
     
     if(updateStatus.success){
@@ -53,13 +50,11 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
     }else {
       const statusCode = updateStatus.errorMsg.statusCode
       return res.status(statusCode).send("Bad Request");
-    } //*/
+    } //
   }
 
   
 
-  // se o usuário não tiver nenhum score, um novo é criado
-  // se ele tiver, e atualizado de acordo com o userScores 
 
 
   return res.status(200)
@@ -89,10 +84,7 @@ async function updateScore(ScoreData) {
   }
 }
 
-/**
- * @param session Sessão atual 
- * @returns Scores do Usuário
- */
+
 async function getUserScores(session: Session) {
 
   function getUserFromSession(session: Session){
@@ -120,9 +112,14 @@ async function getUserScores(session: Session) {
         )
       ),
       q.Create( // se não existir, cria um novo
-        q.Collection("UserScore"),
+        q.Collection("UserScore"), // Criação dos dados no DB
         { 
-          data: { user: {email: user.email} }
+          data: { 
+            user: {email: user.email},
+            NormalSolver: [],
+            BLDSolver: [],
+            TimerSolver: []
+          }
         }
       ),
       q.Get( // se existir, pega os scores atual
