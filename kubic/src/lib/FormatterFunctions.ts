@@ -1,26 +1,30 @@
 
-
-export function SetDisplayVars() {
-  const container = document.getElementById("ContainerWidth");
-  if(!container){
-    console.log("You not have any object to track Width, set by ID: 'ContainerWidth'");
-    return;
-  }
-
-  const WidthPx = container.offsetWidth;
-
-  let itemsInGrid = 0;
-  itemsInGrid = Number((WidthPx / 500).toFixed());
-  if (itemsInGrid <= 0) {
-      itemsInGrid = 1;
-  }
-  if (itemsInGrid > 5) {
-      // itemsInGrid = 5
-  } 
-
-  container.style.setProperty("--grid-width", WidthPx.toString());
-  container.style.setProperty("--grid-items", itemsInGrid.toString());
+export function FormatDoubleNumbers(num: string | number) {
+  return (num<100 ? (num<10 ? '0'+num : num) : '00').toString();
 }
+
+export function milisecondsFormated(ms: number) {
+  const dtStr = ms.toString();
+  const dtLg = dtStr.length;
+  const msCount = Number((
+  (Number(dtStr[dtLg-1]) + 
+  (Number(dtStr[dtLg-2])*10) + 
+  (Number(dtStr[dtLg-3])*100 )) / 10
+  ).toFixed())
+
+  return FormatDoubleNumbers(msCount)
+}
+export function secondsFormated(ms: number) {
+  if(ms < 1000){
+    return '00';
+  }
+  const seconds = Number(Math.floor(ms / 1000).toFixed(0));
+  const rest = Number(Math.floor(seconds / 100).toFixed(0)) * 100;
+  const secondsCalculated = rest < seconds ? seconds-rest:-(rest-seconds) + 100;
+  const secondsClamp = secondsCalculated >= 60? secondsCalculated-60:secondsCalculated
+  return FormatDoubleNumbers(secondsClamp);
+}
+
 
 /**
  * Get string and numeric value from date

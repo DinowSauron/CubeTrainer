@@ -1,0 +1,38 @@
+
+.main {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+
+  p.timer {
+    width: 100%;
+    text-align: center;
+    font-family: 'Cousine', serif;
+    font-size: 4rem !important;
+    margin: 5px;
+
+    span {
+      font-size: 2rem;
+    }
+  }
+
+  button {
+    border: none;
+    margin: auto;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    text-shadow: 2px 2px 5px #000;
+    padding: 10px;
+
+    &.startTimer {
+      background: var(--lightGreen);
+
+    }
+    &.stopTimer {
+      background: #400;
+    }
+  }
+}
