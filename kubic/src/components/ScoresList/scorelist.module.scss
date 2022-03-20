@@ -38,6 +38,12 @@
       background-color: #e2400a;
     }
   }
+  p.timing {
+    width: 9ch;
+    span {
+      font-size: .9rem;
+    }
+  }
   .timerZone{
     display: flex;
     flex-direction: column;

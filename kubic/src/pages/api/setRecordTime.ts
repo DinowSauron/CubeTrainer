@@ -35,7 +35,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
   const updateStatus = await updateScore(userScores)
   
   if(updateStatus.success){
-    return res.status(200);
+    return res.status(200).send({});
   }else {
     const statusCode = updateStatus.errorMsg.statusCode
     return res.status(statusCode).send("Bad Request");

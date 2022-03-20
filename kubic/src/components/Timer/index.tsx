@@ -1,8 +1,8 @@
 import styles from "./timer.module.scss";
-import { useState } from "react";
-import { useEffect } from "react"
+import { useState, useEffect } from "react"
 import { getFormatedDate, milisecondsFormated, secondsFormated } from "../../lib/FormatterFunctions"
 import { api } from "../../services/api";
+import { useScoreContext } from "../../contexts/UserScoresContext";
 
 
 type ExampleProps = {
@@ -17,6 +17,8 @@ export function Timer(props: ExampleProps) {
   const [timingSolve, setTimingSolve] = useState(0);
   const [startCounter, setStartCounter] = useState(false);
   const [startTimingPoint, setStartTimingPoint] = useState((new Date()).getTime());
+  
+  const {NormalSolverData, setNormalSolverData} = useScoreContext();
   
 
   
@@ -41,6 +43,45 @@ export function Timer(props: ExampleProps) {
 
 
 
+  // RECORD FUNCTIONS
+
+  async function handleRecordTime(isDNF = false){
+    const score = {
+      timer: timingSolve + (isDNF?2000:0),
+      isDNF: isDNF,
+      scramble: props.scramble,
+      date: getFormatedDate()
+    }
+    const config = {
+      headers: {"SolverType": props.timerType}
+    }
+
+    const req = await api.post("/setRecordTime",score,config); // update DB
+    if(req.status == 200) {
+      handleCancelTimer();
+      SaveScore(score, props.timerType); // live update without DB
+    } // deie uma mensagem de erro caso não for
+  }
+
+  function SaveScore(score, scoreType:"NormalSolver" | "BLDSolver" | "TimerSolver") {
+
+    switch(scoreType){
+      case "NormalSolver":
+        setNormalSolverData([
+          ...NormalSolverData,
+          score
+        ])
+  
+      default:
+        console.log("Score Salvo Com Sucesso")
+    }
+  
+  }
+
+
+  
+  //  HANDLE FUNCTIONS
+
   function handleStopTiming() {
     setStartCounter(false);
   }
@@ -59,26 +100,6 @@ export function Timer(props: ExampleProps) {
   }
   
 
-  async function handleRecordTime(isDNF = false){
-    const params = {
-      timer: timingSolve + (isDNF?2000:0),
-      isDNF: isDNF,
-      scramble: props.scramble,
-      date: getFormatedDate()
-    }
-
-    const config = {
-      headers: {
-        "SolverType": props.timerType
-      }
-    }
-
-    const req = await api.post("/setRecordTime",params,config);
-    handleCancelTimer();
-    console.log(req)
-  }
-
-
   return (
     <div className={styles.main}>
       
@@ -95,7 +116,7 @@ export function Timer(props: ExampleProps) {
         ): timingSolve == 0 && (
             <button className={styles.startTimer} onClick={() => HandleStartTiming()}>Start Timing</button>
         )
-      } 
+      }
     </div>
   )
 }

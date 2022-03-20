@@ -21,3 +21,4 @@ export function SetDisplayVars() {
   container.style.setProperty("--grid-width", WidthPx.toString());
   container.style.setProperty("--grid-items", itemsInGrid.toString());
 }
+

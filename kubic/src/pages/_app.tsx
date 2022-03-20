@@ -4,6 +4,7 @@ import styles from "../styles/app.module.scss"
 import '../styles/globals.scss'
 
 import { SessionProvider } from "next-auth/react"
+import { ScoreContextProvider } from '../contexts/UserScoresContext'
 
 function MyApp({ Component, pageProps: {session, ...pageProps} }) {
   return (
@@ -11,11 +12,13 @@ function MyApp({ Component, pageProps: {session, ...pageProps} }) {
       <SessionProvider session={session}>
       <AsideBar/>
       
+      <ScoreContextProvider>
       <div className={styles.container}>
         <Header/>
 
         <Component {...pageProps} />
       </div>
+      </ScoreContextProvider>
       </SessionProvider>
     </div>
   )
