@@ -8,22 +8,39 @@ import styles from "./scorelist.module.scss";
 
 type ScoresListProps = {
   
-  timerType: "NormalSolver" | "BLDSolver" | "TimerSolver"
+  scoreType: "NormalSolver" | "BLDSolver" | "TimerSolver"
 }
 
 export function ScoresList(props: ScoresListProps) {
 
   const data = useSession();
   const {NormalSolverData} = useScoreContext();
-  /*useEffect(() => {
-  }, [data])*/
+  const [solverData, setSolverData] = useState([]);
+  useEffect(() => {
+    switch(props.scoreType){
+      case "NormalSolver":
+        setSolverData(NormalSolverData.sort((a,b) => {
+          const aValue = getExtendedDate(a.date);
+          const bValue = getExtendedDate(b.date);
+          return bValue - aValue;
+        }));
 
 
+        return;
+      default: 
+        console.log("No solver Data")
+    }
+  }, [NormalSolverData])
 
+  function getExtendedDate(scoreData) {
+    return (scoreData.dateValue * 1000000) + scoreData.hourValue;
+  }
+
+  
   return (
     <section className={styles.main}>
-      {NormalSolverData.map((score, index) => {
-        const key = (score.date.dateValue * 1000000) + score.date.hourValue;
+      {solverData.map((score, index) => {
+        const key = getExtendedDate(score.date);
         // console.log(key)
         return(
           <ScoreItem score={score} index={index} key={key}/>

@@ -30,8 +30,9 @@ export function ScoreContextProvider(props: {children: ReactNode}) {
     if(dataCollected){
       return
     }
-
+    
     if(data.status === "authenticated") {
+      console.log("Data request...")
       const config = {
         headers: {
           "SolverType": "NormalSolver"

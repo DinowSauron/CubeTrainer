@@ -31,7 +31,7 @@ export default function NormalSolve() {
           <p className={styles.scramble}>Scramble: <span>{scramble}</span></p>
 
           <div className={styles.separator}>
-            <ScoresList timerType="NormalSolver"/>
+            <ScoresList scoreType="NormalSolver"/>
             <div> 
               <Timer scramble={scramble} timerType={"NormalSolver"}/>
             </div>

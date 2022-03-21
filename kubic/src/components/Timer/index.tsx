@@ -3,6 +3,7 @@ import { useState, useEffect } from "react"
 import { getFormatedDate, milisecondsFormated, secondsFormated } from "../../lib/FormatterFunctions"
 import { api } from "../../services/api";
 import { useScoreContext } from "../../contexts/UserScoresContext";
+import { useSession } from "next-auth/react";
 
 
 type ExampleProps = {
@@ -19,7 +20,7 @@ export function Timer(props: ExampleProps) {
   const [startTimingPoint, setStartTimingPoint] = useState((new Date()).getTime());
   
   const {NormalSolverData, setNormalSolverData} = useScoreContext();
-  
+  const session = useSession();
 
   
   function runTiming() {
@@ -55,12 +56,17 @@ export function Timer(props: ExampleProps) {
     const config = {
       headers: {"SolverType": props.timerType}
     }
-
-    const req = await api.post("/setRecordTime",score,config); // update DB
-    if(req.status == 200) {
+    if(session.status === "authenticated") {
+      const req = await api.post("/setRecordTime", score, config); // update DB
+      if(req.status == 200) {
+        handleCancelTimer();
+        SaveScore(score, props.timerType); // live update without DB
+      } // deie uma mensagem de erro caso não for.
+    } else {
+      // Se não tiver logado, apenas salva para a sessão atual.
+      SaveScore(score, props.timerType);
       handleCancelTimer();
-      SaveScore(score, props.timerType); // live update without DB
-    } // deie uma mensagem de erro caso não for
+    }
   }
 
   function SaveScore(score, scoreType:"NormalSolver" | "BLDSolver" | "TimerSolver") {
