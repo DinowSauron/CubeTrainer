@@ -6,8 +6,7 @@ body {
   box-sizing: border-box;
   min-height: 100vh;
   background-color: var(--bk2);
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: 'Roboto', sans-serif;
 
   overflow: hidden;
 }
@@ -37,10 +36,16 @@ button {
 }
 button:hover{
   cursor: pointer;
-  opacity: 0.82;
+  opacity: 0.72;
 }
 
 
+// Custom Fonts:
+
+@font-face {
+  font-family: SegoeUI;
+  src: url(/extras/segoe-ui.ttf);
+}
 
 
 // scroolbars

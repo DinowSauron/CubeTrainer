@@ -1,5 +1,6 @@
 import NextAuth from "next-auth"
 import GithubProvider from "next-auth/providers/github"
+import GoogleProvider from "next-auth/providers/google"
 import { q, fauna} from "../../../services/fauna"
 
 
@@ -10,9 +11,17 @@ export default NextAuth({
       clientId: process.env.GITHUB_ID,
       clientSecret: process.env.GITHUB_SECRET,
     }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_ID,
+      clientSecret: process.env.GOOGLE_SECRET,
+    })
     // ...add more providers here
   ],
-  
+  theme: {
+    colorScheme: "dark",
+    brandColor: "#3dc98d", 
+    logo: "/images/branding-logo.png",
+  },
   jwt: {
     secret: process.env.HASH_KEY
   },

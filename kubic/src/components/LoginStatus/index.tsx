@@ -21,7 +21,7 @@ export function LoginStatus(props: LoginStatusProps) {
             <h3>{session.user.name}</h3>
             <p>{session.user.email}</p>
           </div>
-          <Img className={styles.img} src={session.user.image} alt="profile picture"/>
+          <Img className={styles.img} src={session.user.image} alt="Foto do seu pérfil de usuário"/>
         </button>
       ): (
         <button onClick={() => signIn()}>
@@ -29,7 +29,7 @@ export function LoginStatus(props: LoginStatusProps) {
             <h3>Not Signed</h3>
             <p>Click to Sign in</p>
           </div>
-          <Img className={styles.img} src="https://github.com/dinowsauron.png" alt="profile picture"/>
+          <Img className={styles.img} src="/images/guest-image.png" alt="Foto de perfil do usuário não logado"/>
         </button>
       )}
     </div>
