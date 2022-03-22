@@ -22,16 +22,24 @@ export const ScoreContext = createContext({} as ScoreContextProps)
 
 export function ScoreContextProvider(props: {children: ReactNode}) {
 
-  const data = useSession();
-  const [dataCollected, setDataCollected] = useState(false);
+  const session = useSession();
+  const [dataCollected, setDataCollected] = useState({isCollected:false, userEmailCollected:"email@email.com"});
   const [NormalSolverData, setNormalSolverData] = useState([]);
   
   useEffect(() => {
-    if(dataCollected){
-      return
+    if(!session.data) {
+      return;
+    }
+
+    // Não atualiza caso já possui os dados dos scores.
+    // Previne de ficar com score do usuário anterior após um novo login
+    const userEmail = session.data.user.email;
+    const dataEmail = dataCollected.userEmailCollected
+    if(dataCollected.isCollected == true && dataEmail === userEmail){
+      return;
     }
     
-    if(data.status === "authenticated") {
+    if(session.status === "authenticated") {
       console.log("Data request...")
       const config = {
         headers: {
@@ -41,12 +49,15 @@ export function ScoreContextProvider(props: {children: ReactNode}) {
       api.get("/getUserScore", config)
       .then(res => {
         setNormalSolverData(res.data.data);
-        setDataCollected(true);
+        setDataCollected({
+          isCollected: true,
+          userEmailCollected: userEmail
+        });
       })
       
   
     }
-  }, [data]);
+  }, [session]);
 
   return (
     <ScoreContext.Provider value={{
