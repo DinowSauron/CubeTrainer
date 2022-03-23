@@ -19,7 +19,7 @@ export function Timer(props: ExampleProps) {
   const [startCounter, setStartCounter] = useState(false);
   const [startTimingPoint, setStartTimingPoint] = useState((new Date()).getTime());
   
-  const {NormalSolverData, setNormalSolverData} = useScoreContext();
+  const {NormalSolverData, setNormalSolverData, BLDSolverData, setBLDSolverData} = useScoreContext();
   const session = useSession();
 
   
@@ -75,6 +75,11 @@ export function Timer(props: ExampleProps) {
       case "NormalSolver":
         setNormalSolverData([
           ...NormalSolverData,
+          score
+        ])
+      case "BLDSolver":
+        setBLDSolverData([
+          ...BLDSolverData,
           score
         ])
   

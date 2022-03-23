@@ -24,7 +24,6 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
   }
 
 
-
   if(solverType == "all"){
     return res.send({data: userScores.data})
   } else {

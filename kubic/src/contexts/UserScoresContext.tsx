@@ -16,6 +16,8 @@ type score = {
 type ScoreContextProps = {
   NormalSolverData: score[];
   setNormalSolverData: (agr0: score[]) => void;
+  BLDSolverData: score[];
+  setBLDSolverData: (agr0: score[]) => void;
 }
 
 export const ScoreContext = createContext({} as ScoreContextProps)
@@ -25,6 +27,7 @@ export function ScoreContextProvider(props: {children: ReactNode}) {
   const session = useSession();
   const [dataCollected, setDataCollected] = useState({isCollected:false, userEmailCollected:"email@email.com"});
   const [NormalSolverData, setNormalSolverData] = useState([]);
+  const [BLDSolverData, setBLDSolverData] = useState([]);
   
   useEffect(() => {
     if(!session.data) {
@@ -41,28 +44,34 @@ export function ScoreContextProvider(props: {children: ReactNode}) {
     
     if(session.status === "authenticated") {
       console.log("Data request...")
+      
       const config = {
         headers: {
-          "SolverType": "NormalSolver"
+          "SolverType": "all"
         }
       }
-      api.get("/getUserScore", config)
-      .then(res => {
-        setNormalSolverData(res.data.data);
+
+      api.get("/getUserScore", config).then(res => {
+        // console.log(res.data);
+        const data = res.data.data;
+        setNormalSolverData(data["NormalSolver"]);
+        setBLDSolverData(data["BLDSolver"]);
+        
         setDataCollected({
           isCollected: true,
           userEmailCollected: userEmail
         });
       })
       
-  
     }
   }, [session]);
 
   return (
     <ScoreContext.Provider value={{
       NormalSolverData,
-      setNormalSolverData
+      setNormalSolverData,
+      BLDSolverData,
+      setBLDSolverData,
     }}>
       {props.children}
     </ScoreContext.Provider>
