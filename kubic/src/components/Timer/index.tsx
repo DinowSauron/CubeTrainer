@@ -1,6 +1,6 @@
 import styles from "./timer.module.scss";
 import { useState, useEffect } from "react"
-import { getFormatedDate, milisecondsFormated, secondsFormated } from "../../lib/FormatterFunctions"
+import { getFormatedDate, milisecondsFormated, secondsFormated, minutesFormated } from "../../lib/FormatterFunctions"
 import { api } from "../../services/api";
 import { useScoreContext } from "../../contexts/UserScoresContext";
 import { useSession } from "next-auth/react";
@@ -8,13 +8,15 @@ import { useSession } from "next-auth/react";
 
 type ExampleProps = {
   scramble: string;
-  timerType: "NormalSolver" | "BLDSolver" | "TimerSolver"
+  timerType: "NormalSolver" | "BLDSolver" | "TimerSolver";
+  helper: boolean;
 }
 
 export function Timer(props: ExampleProps) {
 
   const [miliseconds, setMiliseconds] = useState('00');
   const [seconds, setSeconds] = useState('00');
+  const [minutes, setMinutes] = useState('  ');
   const [timingSolve, setTimingSolve] = useState(0);
   const [startCounter, setStartCounter] = useState(false);
   const [startTimingPoint, setStartTimingPoint] = useState((new Date()).getTime());
@@ -39,6 +41,7 @@ export function Timer(props: ExampleProps) {
 
     setSeconds(secondsFormated(timingSolve));
     setMiliseconds(milisecondsFormated(timingSolve));
+    setMinutes(minutesFormated(timingSolve));
   }, [timingSolve, startCounter]);
 
 
@@ -114,7 +117,12 @@ export function Timer(props: ExampleProps) {
   return (
     <div className={styles.main}>
       
-      <p className={styles.timer}>{seconds}<span>.{miliseconds}</span></p>
+      <p className={styles.timer}>
+        {minutes}{minutes != "  " && ":"}
+        {seconds}
+        <span>.{miliseconds}</span>
+      </p>
+      {timingSolve}
       {timingSolve > 0 && !startCounter && (
         <div>
           <button onClick={() => handleRecordTime()}>Record Timer</button>
@@ -128,6 +136,13 @@ export function Timer(props: ExampleProps) {
             <button className={styles.startTimer} onClick={() => HandleStartTiming()}>Start Timing</button>
         )
       }
+
+      {props.helper && (
+        <div className={styles.helperContainer + " " + (startCounter && "shadow")}>
+          <p><span>Edges:</span> <input className={styles.helper} type="text" /></p>
+          <p><span>Corners:</span> <input className={styles.helper} type="text" /></p>
+        </div>
+      )}
     </div>
   )
 }

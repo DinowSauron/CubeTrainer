@@ -36,3 +36,34 @@
     }
   }
 }
+
+
+.helperContainer {
+  width: 100%;
+
+  p {
+    margin: 0;
+    
+    span{
+      padding-left: 15px;
+    }
+  }
+  
+
+  input.helper {
+    position: relative;
+    width: 100%;
+    padding: 8px 15px;
+    margin: 0 0 15px 0;
+
+    font-size: 1.2rem;
+    background: var(--frameGreen);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+
+    border: solid #fff 2px;
+    border-radius: 20px;
+
+    
+  }
+}

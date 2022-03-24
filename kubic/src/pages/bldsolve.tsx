@@ -33,7 +33,7 @@ export default function NormalSolve() {
           <div className={styles.separator}>
             <ScoresList scoreType="BLDSolver"/>
             <div> 
-              <Timer scramble={scramble} timerType={"BLDSolver"}/>
+              <Timer scramble={scramble} timerType={"BLDSolver"} helper/>
             </div>
           </div>
         </div>

@@ -19,10 +19,19 @@ export function secondsFormated(ms: number) {
     return '00';
   }
   const seconds = Number(Math.floor(ms / 1000).toFixed(0));
-  const rest = Number(Math.floor(seconds / 100).toFixed(0)) * 100;
-  const secondsCalculated = rest < seconds ? seconds-rest:-(rest-seconds) + 100;
+  const minutesCalculated = Math.floor(seconds / 60)
+  const secondsCalculated = seconds - ( 60 * minutesCalculated);
   const secondsClamp = secondsCalculated >= 60? secondsCalculated-60:secondsCalculated
   return FormatDoubleNumbers(secondsClamp);
+}
+export function minutesFormated(ms: number) {
+  if(ms < 60000){
+    return '  ';
+  }
+  const seconds = Number(Math.floor(ms / 1000).toFixed(0));
+  const minutesCalculated = Math.floor(seconds / 60)
+
+  return FormatDoubleNumbers(minutesCalculated);
 }
 
 
