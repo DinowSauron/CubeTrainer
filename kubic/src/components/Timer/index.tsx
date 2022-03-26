@@ -14,35 +14,29 @@ type ExampleProps = {
 
 export function Timer(props: ExampleProps) {
 
-  const [miliseconds, setMiliseconds] = useState('00');
-  const [seconds, setSeconds] = useState('00');
-  const [minutes, setMinutes] = useState('  ');
   const [timingSolve, setTimingSolve] = useState(0);
-  const [startCounter, setStartCounter] = useState(false);
+  const [isCounting, setIsCounting] = useState(false);
   const [startTimingPoint, setStartTimingPoint] = useState((new Date()).getTime());
   
   const {NormalSolverData, setNormalSolverData, BLDSolverData, setBLDSolverData} = useScoreContext();
   const session = useSession();
 
   
-  function runTiming() {
-    if(startCounter){
+  function runCounter() {
+    if(isCounting){
       const timer = (new Date()).getTime();
       const timerCount = timer - startTimingPoint;
       setTimingSolve(timerCount);
     }
   }
   useEffect(() => {
-    setTimeout(() => {
-      if(startCounter){
-        runTiming();
+    setTimeout(() => {// prevent to many renders
+      if(isCounting){
+        runCounter();
       }
     }, 50);
 
-    setSeconds(secondsFormated(timingSolve));
-    setMiliseconds(milisecondsFormated(timingSolve));
-    setMinutes(minutesFormated(timingSolve));
-  }, [timingSolve, startCounter]);
+  }, [timingSolve, isCounting]);
 
 
 
@@ -50,8 +44,9 @@ export function Timer(props: ExampleProps) {
   // RECORD FUNCTIONS
 
   async function handleRecordTime(isDNF = false){
+    const DNFpenality = isDNF? 2000:0;
     const score = {
-      timer: timingSolve + (isDNF?2000:0),
+      timer: timingSolve + DNFpenality,
       isDNF: isDNF,
       scramble: props.scramble,
       date: getFormatedDate()
@@ -97,48 +92,58 @@ export function Timer(props: ExampleProps) {
   //  HANDLE FUNCTIONS
 
   function handleStopTiming() {
-    setStartCounter(false);
+    setIsCounting(false);
   }
   function HandleStartTiming() {
     if(timingSolve > 0) {
       setTimingSolve(0);
     }
     setStartTimingPoint((new Date()).getTime());
-    setStartCounter(true);
-    runTiming()
+    setIsCounting(true);
+    runCounter()
     // setTimingSolve(0);
   }
   function handleCancelTimer() {
     setTimingSolve(0);
-    setStartCounter(false);
+    setIsCounting(false);
   }
   
+
+
+  const miliseconds = milisecondsFormated(timingSolve);
+  const seconds = secondsFormated(timingSolve);
+  const minutes = minutesFormated(timingSolve);
 
   return (
     <div className={styles.main}>
       
       <p className={styles.timer}>
         {minutes}{minutes != "  " && ":"}
-        {seconds}
-        <span>.{miliseconds}</span>
+        <span>{seconds}</span>
+        <span className={styles.small}>.</span>
+        <span className={styles.small}>{miliseconds}</span>
       </p>
-      {timingSolve}
-      {timingSolve > 0 && !startCounter && (
+
+
+      {timingSolve > 0 && !isCounting && (
         <div>
           <button onClick={() => handleRecordTime()}>Record Timer</button>
           <button onClick={() => handleRecordTime(true)}>Record Timer +DNF</button>
           <button onClick={() => handleCancelTimer()}>Cancel Timer</button>
         </div>
       )}
-      {startCounter ? (
+
+
+      {isCounting ? (
         <button className={styles.stopTimer} onClick={() => handleStopTiming()}>Stop Timing</button>
         ): timingSolve == 0 && (
             <button className={styles.startTimer} onClick={() => HandleStartTiming()}>Start Timing</button>
         )
       }
 
+
       {props.helper && (
-        <div className={styles.helperContainer + " " + (startCounter && "shadow")}>
+        <div className={styles.helperContainer + " " + (isCounting && "shadow")}>
           <p><span>Edges:</span> <input className={styles.helper} type="text" /></p>
           <p><span>Corners:</span> <input className={styles.helper} type="text" /></p>
         </div>

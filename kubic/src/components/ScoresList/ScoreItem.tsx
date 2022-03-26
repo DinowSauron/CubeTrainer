@@ -18,7 +18,7 @@ type ScoreItemProps = {
 
 export default function ScoreItem({score, index}: ScoreItemProps){
 
-  const ms = milisecondsFormated(score.timer);
+  const ms = milisecondsFormated(score.timer, true);
   const sec = secondsFormated(score.timer);
   const min = Number(minutesFormated(score.timer));
 

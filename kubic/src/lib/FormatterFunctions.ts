@@ -1,37 +1,32 @@
 
-export function FormatDoubleNumbers(num: string | number) {
-  return (num<100 ? (num<10 ? '0'+num : num) : '00').toString();
+export function PadNumber(num: number,padNum: number = 2) {
+  return String(num).padStart(padNum, "0");
 }
 
-export function milisecondsFormated(ms: number) {
-  const dtStr = ms.toString();
-  const dtLg = dtStr.length;
-  const msCount = Number((
-  (Number(dtStr[dtLg-1]) + 
-  (Number(dtStr[dtLg-2])*10) + 
-  (Number(dtStr[dtLg-3])*100 )) / 10
-  ).toFixed())
+export function milisecondsFormated(ms: number, allDigits = false) {
+  const miliseconds = ms % 1000;
+  const milisecondsFormated = Math.floor(miliseconds / (allDigits?1:10))
 
-  return FormatDoubleNumbers(msCount)
+  return PadNumber(milisecondsFormated, allDigits?3:2);
 }
+
 export function secondsFormated(ms: number) {
   if(ms < 1000){
     return '00';
   }
   const seconds = Number(Math.floor(ms / 1000).toFixed(0));
-  const minutesCalculated = Math.floor(seconds / 60)
-  const secondsCalculated = seconds - ( 60 * minutesCalculated);
-  const secondsClamp = secondsCalculated >= 60? secondsCalculated-60:secondsCalculated
-  return FormatDoubleNumbers(secondsClamp);
+  const secondsCalculated = seconds % 60;
+  return PadNumber(secondsCalculated);
 }
+
 export function minutesFormated(ms: number) {
-  if(ms < 60000){
+  if(ms < 60 * 1000){
     return '  ';
   }
   const seconds = Number(Math.floor(ms / 1000).toFixed(0));
-  const minutesCalculated = Math.floor(seconds / 60)
+  const minutesCalculated = Math.floor(seconds / 60);
 
-  return FormatDoubleNumbers(minutesCalculated);
+  return PadNumber(minutesCalculated);
 }
 
 
