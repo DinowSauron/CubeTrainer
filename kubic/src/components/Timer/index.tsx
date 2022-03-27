@@ -10,6 +10,10 @@ type ExampleProps = {
   scramble: string;
   timerType: "NormalSolver" | "BLDSolver" | "TimerSolver";
   helper: boolean;
+  setEdges?: (agr0: string) => void;
+  edges?: string;
+  setCorners?: (arg0: string) => void;
+  corners?: string;
 }
 
 export function Timer(props: ExampleProps) {
@@ -30,40 +34,66 @@ export function Timer(props: ExampleProps) {
     }
   }
   useEffect(() => {
+    let isCounteractive = true;
+
     setTimeout(() => {// prevent to many renders
-      if(isCounting){
-        runCounter();
-      }
-    }, 50);
+      isCounteractive && runCounter();
+    }, 50);                                                                           
 
+    return () => {
+      isCounteractive = false;
+    }
   }, [timingSolve, isCounting]);
+  useEffect(() => {
+    window.addEventListener('keyup', handleStartByKeyup);
+  }, [])
 
 
-
+  function handleStartByKeyup(e) {
+    const key = e.code;
+    if(key == "Space"){
+      setIsCounting(state => {
+        if(state == false){
+          HandleStartTiming()
+          return true;
+        } else {
+          HandleStopTiming()
+          return false;
+        }
+      });
+    }
+  }
 
   // RECORD FUNCTIONS
 
   async function handleRecordTime(isDNF = false){
     const DNFpenality = isDNF? 2000:0;
+    const helper = props.helper ? {
+      corners: props.corners,
+      edges: props.edges
+    } : {};
     const score = {
       timer: timingSolve + DNFpenality,
       isDNF: isDNF,
+      helper: helper,
       scramble: props.scramble,
       date: getFormatedDate()
     }
     const config = {
       headers: {"SolverType": props.timerType}
     }
+
+    // Send Score
     if(session.status === "authenticated") {
       const req = await api.post("/setRecordTime", score, config); // update DB
       if(req.status == 200) {
-        handleCancelTimer();
+        HandleCancelTimer();
         SaveScore(score, props.timerType); // live update without DB
-      } // deie uma mensagem de erro caso não for.
+      } // deixe uma mensagem de erro caso não for.
     } else {
       // Se não tiver logado, apenas salva para a sessão atual.
       SaveScore(score, props.timerType);
-      handleCancelTimer();
+      HandleCancelTimer();
     }
   }
 
@@ -84,14 +114,13 @@ export function Timer(props: ExampleProps) {
       default:
         console.log("Score Salvo Com Sucesso")
     }
-  
   }
 
 
   
   //  HANDLE FUNCTIONS
 
-  function handleStopTiming() {
+  function HandleStopTiming() {
     setIsCounting(false);
   }
   function HandleStartTiming() {
@@ -100,10 +129,10 @@ export function Timer(props: ExampleProps) {
     }
     setStartTimingPoint((new Date()).getTime());
     setIsCounting(true);
-    runCounter()
+    // runCounter()
     // setTimingSolve(0);
   }
-  function handleCancelTimer() {
+  function HandleCancelTimer() {
     setTimingSolve(0);
     setIsCounting(false);
   }
@@ -129,13 +158,13 @@ export function Timer(props: ExampleProps) {
         <div>
           <button onClick={() => handleRecordTime()}>Record Timer</button>
           <button onClick={() => handleRecordTime(true)}>Record Timer +DNF</button>
-          <button onClick={() => handleCancelTimer()}>Cancel Timer</button>
+          <button onClick={() => HandleCancelTimer()}>Cancel Timer</button>
         </div>
       )}
 
 
       {isCounting ? (
-        <button className={styles.stopTimer} onClick={() => handleStopTiming()}>Stop Timing</button>
+        <button className={styles.stopTimer} onClick={() => HandleStopTiming()}>Stop Timing</button>
         ): timingSolve == 0 && (
             <button className={styles.startTimer} onClick={() => HandleStartTiming()}>Start Timing</button>
         )
@@ -144,8 +173,20 @@ export function Timer(props: ExampleProps) {
 
       {props.helper && (
         <div className={styles.helperContainer + " " + (isCounting && "shadow")}>
-          <p><span>Edges:</span> <input className={styles.helper} type="text" /></p>
-          <p><span>Corners:</span> <input className={styles.helper} type="text" /></p>
+
+          <p><span>Edges:</span> 
+          <input className={styles.helper} 
+            onChange={e => props.setEdges(e.target.value)} 
+            value={props.edges} 
+            type="text" />
+          </p>
+
+          <p><span>Corners:</span> 
+          <input className={styles.helper} 
+            onChange={e => props.setCorners(e.target.value)} 
+            value={props.corners} 
+            type="text" />
+          </p>
         </div>
       )}
     </div>

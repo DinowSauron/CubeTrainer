@@ -42,6 +42,8 @@ export function ScoreContextProvider(props: {children: ReactNode}) {
       return;
     }
     
+    let isApiSubscribed = true; // resolve memory leak
+
     if(session.status === "authenticated") {
       console.log("Data request...")
       
@@ -50,20 +52,25 @@ export function ScoreContextProvider(props: {children: ReactNode}) {
           "SolverType": "all"
         }
       }
-
       api.get("/getUserScore", config).then(res => {
         // console.log(res.data);
-        const data = res.data.data;
-        setNormalSolverData(data["NormalSolver"]);
-        setBLDSolverData(data["BLDSolver"]);
-        
-        setDataCollected({
-          isCollected: true,
-          userEmailCollected: userEmail
-        });
+        if(isApiSubscribed){ // resolve memory leak
+          const data = res.data.data;
+          setNormalSolverData(data["NormalSolver"]);
+          setBLDSolverData(data["BLDSolver"]);
+          
+          setDataCollected({
+            isCollected: true,
+            userEmailCollected: userEmail
+          });
+        }
       })
-      
     }
+
+    return () => { // resolve memory leak
+      isApiSubscribed = false
+    }
+
   }, [session]);
 
   return (

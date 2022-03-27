@@ -32,8 +32,8 @@ export function ScoresList(props: ScoresListProps) {
 
   function setScoreDataSort(data: any[]) {
     setSolverData(data.sort((a,b) => {
-      const aValue = getExtendedDate(a.date);
-      const bValue = getExtendedDate(b.date);
+      const aValue = a.date.dateInMiliseconds;
+      const bValue = b.date.dateInMiliseconds;
       return bValue - aValue;
     }));
   }
@@ -45,14 +45,16 @@ export function ScoresList(props: ScoresListProps) {
   
   return (
     <section className={styles.main}>
-      {solverData.map((score, index) => {
-        const key = getExtendedDate(score.date);
-        // console.log(key)
-        return(
-          <ScoreItem score={score} index={index} key={key}/>
-        )
-      }
+      <ul>
+        {solverData.map((score, index) => {
+          const key = score.date.dateInMiliseconds;
+          // console.log(key)
+          return(
+            <ScoreItem score={score} index={index} key={key}/>
+          )
+        }
       )}
+      </ul>
     </section>
   )
 }

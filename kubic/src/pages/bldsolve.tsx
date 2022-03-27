@@ -17,6 +17,8 @@ export default function NormalSolve() {
   }, [])
 
   const scramble = "U' L2 D' U R2 B' D' U' L2 B2 R' U' B' F' L U2 F R2 U'"
+  const [edges, setEdges] = useState("");
+  const [corners, setCorners] = useState("");
 
 
 
@@ -33,7 +35,15 @@ export default function NormalSolve() {
           <div className={styles.separator}>
             <ScoresList scoreType="BLDSolver"/>
             <div> 
-              <Timer scramble={scramble} timerType={"BLDSolver"} helper/>
+              <Timer 
+                scramble={scramble} 
+                edges={edges} 
+                setEdges={setEdges} 
+                corners={corners}
+                setCorners={setCorners}
+                timerType={"BLDSolver"} 
+                helper
+              />
             </div>
           </div>
         </div>

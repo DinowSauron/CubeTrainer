@@ -6,6 +6,10 @@ type ScoreItemProps = {
     timer: number,
     isDNF: boolean,
     scramble: string,
+    helper: {
+      edges?: string;
+      corners?: string;
+    }
     date: {
       dateString: string,
       hourString: string,
@@ -24,7 +28,7 @@ export default function ScoreItem({score, index}: ScoreItemProps){
 
 
   return (
-    <div className={styles.item}>
+    <li className={styles.item}>
       <h3 className={score.isDNF?styles.dnf:""}>{index + 1}</h3>
       <div className={styles.timerZone}>
         <p className={styles.timing}>{min != 0 && (min+":")}{sec}.<span>{ms}</span></p>
@@ -32,6 +36,6 @@ export default function ScoreItem({score, index}: ScoreItemProps){
           <p className={styles.dnfRecord}> +2 DNF</p>
         )}
       </div>
-    </div>
+    </li>
   )
 }

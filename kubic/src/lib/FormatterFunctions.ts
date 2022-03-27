@@ -58,9 +58,10 @@ export function getFormatedDate(date: Date | undefined = undefined){
   const dateValue = (year*10000) + (month*100) + day;
   const dateString = getStringFromValue(dateValue, "/", [4,2,2]) // o ano tem 4 numeros
   const hourString = getStringFromValue(hourValue, ":", [2,2,2])
-
+  const dateInMiliseconds = (new Date()).getTime()
 
   const formatedValue = {
+    dateInMiliseconds,
     dateString,
     dateValue,
     hourString,
